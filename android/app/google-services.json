@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "848262451877",
+    "project_id": "wego-366904",
+    "storage_bucket": "wego-366904.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:848262451877:android:355a7c49d3df45dbaa334c",
+        "android_client_info": {
+          "package_name": "com.wego.wegocol"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "848262451877-8mkq2802pic1e1ol4salm8q4ilhojva3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDbDiruwuJjk_H7Wmm93D_yZkPo0rA83qM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "848262451877-8mkq2802pic1e1ol4salm8q4ilhojva3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
