@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:provider/provider.dart';
 import 'package:wegocol/pages/driver/map/driver_map_controller.dart';
+import 'package:wegocol/providers/socket.dart';
 import 'package:wegocol/utils/Colors.dart' as utils;
 
 class DriverMapPage extends StatefulWidget {
@@ -33,6 +35,9 @@ class _DriverMapPageState extends State<DriverMapPage> {
 
   @override
   Widget build(BuildContext context) {
+    final socketService =Provider.of<SocketService>(context);
+    print('esto devuelve $socketService');
+
 
     return Scaffold(
       key: _con.key,
@@ -50,6 +55,8 @@ class _DriverMapPageState extends State<DriverMapPage> {
                     _buttonCenterPosition(),
                   ],
                 ),
+
+                //Text('serverStatus: ${socketService.serverStatus}'),
                 Expanded(child: Container()),
                 _buttonConnect()
               ],
@@ -127,10 +134,11 @@ class _DriverMapPageState extends State<DriverMapPage> {
         primary: utils.Colors.orowego,
     );
     return ElevatedButton(
-        onPressed: () {
 
-        },
-        child: Text('iniciar sesion',style:TextStyle(
+        onPressed: _con.connet,
+        child:_con.isConnect ? Text('DESCONECTARSE',style:TextStyle(
+            color: utils.Colors.vinowego
+        ),): Text('CONECTARSE',style:TextStyle(
             color: utils.Colors.vinowego
         ),),
         style: ButtonStyle(
@@ -141,7 +149,7 @@ class _DriverMapPageState extends State<DriverMapPage> {
     RoundedRectangleBorder(
     borderRadius: BorderRadius.circular(18.0))
     )
-        )
+        ),
 
 
     );

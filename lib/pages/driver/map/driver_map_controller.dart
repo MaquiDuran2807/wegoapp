@@ -5,6 +5,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart'as location;
 import 'package:wegocol/providers/auth_providers.dart';
+import 'package:wegocol/providers/geofire_provider.dart';
 import 'package:wegocol/utils/snackbar.dart' as utils ;
 import 'package:wegocol/models/driver.dart';
 import 'package:geolocator_android/geolocator_android.dart';
@@ -17,11 +18,12 @@ class DriverMapController {
   GlobalKey<ScaffoldState> key = new GlobalKey<ScaffoldState>();
   Completer<GoogleMapController> _mapController = Completer();
   Position _position;
+  GeofireProvider _geofireProvider;
   StreamSubscription<Position> _positionStream;
-  //GeofireProvider _geofireProvider;
   BitmapDescriptor markerDriver;
   AuthProvider _authProvider;
   Driver driver;
+  bool isConnect =false;
 
 
   CameraPosition initialPosition = CameraPosition(
@@ -33,6 +35,8 @@ class DriverMapController {
   Future init(BuildContext context, Function refresh) async {
     this.context = context;
     this.refresh = refresh;
+    _geofireProvider = new GeofireProvider();
+    _authProvider = new AuthProvider();
     markerDriver = await createMarkerImageFromAsset('assets/img/grey_car.png');
     checkGPS();
     print('=================inicio');
@@ -46,13 +50,21 @@ class DriverMapController {
     await _authProvider.signOut();
     Navigator.pushNamedAndRemoveUntil(context, 'home', (route) => false);
   }
+  void saveLocation() async {
+    await _geofireProvider.create(
+        _authProvider.getUser().uid,
+        _position.latitude,
+        _position.longitude
+    );
+    //_progressDialog.hide();
+  }
 
   void updateLocation() async  {
     try {
       await _determinePosition();
       _position = await Geolocator.getLastKnownPosition();
       centerPosition();
-      //saveLocation();
+      saveLocation();
       addMarker(
           'driver',
           _position.latitude,
@@ -73,7 +85,7 @@ class DriverMapController {
         _position = position;
 
         animateCameraToPosition(_position.latitude, _position.longitude);
-        //saveLocation();
+        saveLocation();
         refresh();
       });
 
@@ -194,6 +206,24 @@ class DriverMapController {
     );
 
     markers[id] = marker;
+
+  }
+  void connet(){
+    if(isConnect){
+      isConnect=false;
+      disconnect();
+      print('===========desconectar============');
+    }
+    else{
+      isConnect=true;
+      updateLocation();
+      print('===========conectar============');
+    }
+  }
+  void disconnect(){
+
+    _positionStream?.cancel();
+    refresh();
 
   }
 }

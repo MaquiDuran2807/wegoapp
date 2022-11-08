@@ -38,7 +38,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   firebase_auth: ^4.1.0
   firebase_core: ^2.1.1
-  cloud_firestore: ^4.0.0
+  cloud_firestore: ^4.0.3
   progress_dialog: ^1.2.0
   shared_preferences: ^2.0.15
   google_maps_flutter: ^2.2.1
@@ -46,7 +46,9 @@ dependencies:
   permission_handler: ^8.3.0
   location: ^4.2.0
   flutter_bloc: ^8.0.0
-  #geoflutterfire: ^3.0.3
+  geo_firestore_flutter: ^0.1.6
+  provider: ^6.0.4
+  socket_io_client: ^2.0.0
 
 dev_dependencies:
   flutter_test:
