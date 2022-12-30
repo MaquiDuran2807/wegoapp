@@ -62,7 +62,9 @@ class _LoginPageState extends State<LoginPage> {
                     SizedBox(height: 20,),
                     botonSubmit(),
                     SizedBox(height: 20,),
-                    textbuttonForgotPassword(),
+                    textbuttonForgotPassword('¿Olvidaste Tu Contraseña?'),
+                    SizedBox(height: 20,),
+                    textbuttonRegister("registrarse"),
                     SizedBox(height:MediaQuery.of(context).size.height*0.32,)
                   ],
                 ),
@@ -77,9 +79,20 @@ class _LoginPageState extends State<LoginPage> {
 
 
   }
-  Widget textbuttonForgotPassword(){
+  Widget textbuttonRegister(text){
+    return TextButton(onPressed: (){
+      Navigator.pushNamed(context, 'register');
+    },
+        child:Text(text,style: TextStyle(
+            color: Colors.white,
+            fontSize: 15
+        ),)
+    );
+  }
+
+  Widget textbuttonForgotPassword(text){
     return TextButton(onPressed: (){},
-        child:Text('¿Olvidaste Tu Contraseña?',style: TextStyle(
+        child:Text(text,style: TextStyle(
           color: Colors.white,
           fontSize: 15
         ),)

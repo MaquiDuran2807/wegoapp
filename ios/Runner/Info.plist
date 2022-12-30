@@ -4,6 +4,15 @@
 <dict>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+    <string>Necesito permisos para acceder a la galeria de fotos</string>
+    <key>NSCameraUsageDescription</key>
+    <string>Necesito permisos para acceder a la camara</string>
+    <key>LSApplicationQueriesSchemes</key>
+    <array>
+      <string>sms</string>
+      <string>tel</string>
+    </array>
 	<key>CFBundleDisplayName</key>
 	<string>Wegocol</string>
 	<key>CFBundleExecutable</key>

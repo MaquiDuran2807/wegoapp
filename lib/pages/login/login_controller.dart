@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:wegocol/models/driver.dart';
 import 'package:wegocol/models/client.dart';
@@ -22,16 +23,22 @@ class LoginController {
   ProgressDialog _progressDialog;
   DriverProvider _driverProvider;
   ClientProvider _clientProvider;
+  String token;
+  String email;
+  String password;
+  Future<bool> reg;
+
 
   SharedPref _sharedPref;
   String _typeUser;
 
-  Future init (BuildContext context) async {
+  Future init(BuildContext context) async {
     this.context = context;
     _authProvider = new AuthProvider();
     _driverProvider = new DriverProvider();
     _clientProvider = new ClientProvider();
-    _progressDialog = MyProgressDialog.createProgressDialog(context, 'Espere un momento...');
+    _progressDialog =
+        MyProgressDialog.createProgressDialog(context, 'Espere un momento...');
     _sharedPref = new SharedPref();
     _typeUser = await _sharedPref.read('typeUser');
 
@@ -39,76 +46,65 @@ class LoginController {
     print(_typeUser);
   }
 
-  void goToRegisterPage() {
-
-    if (_typeUser == 'client') {
-      Navigator.pushNamed(context, 'client/register');
-    }
-    else {
-      Navigator.pushNamed(context, 'driver/register');
-    }
-
-
-  }
 
   void login() async {
-    String email = emailController.text.trim();
-    String password = passwordController.text.trim();
+    email = emailController.text.trim();
+    password = passwordController.text.trim();
+    await _sharedPref.save('correo', email);
 
     print('Email: $email');
     print('Password: $password');
 
     _progressDialog.show();
-
-    try {
-
+    await _authProvider.dataClient(email);
+    if (_authProvider.isActive==false){
+      utils.Snackbar.showSnackbar(
+          context, key, 'El usuario no esta activado aun');
+      return;
+    }
+    try{
       bool isLogin = await _authProvider.login(email, password);
       _progressDialog.hide();
-
-      if (isLogin) {
-        print('El usuario esta logeado');
-
-        if (_typeUser == 'client') {
-          Client client = await _clientProvider.getById(_authProvider.getUser().uid);
-          print('CLIENT: $client');
-
-          if (client != null) {
-            print('El cliente no es nulo');
+      if(isLogin){
+        print('se loguio');
+        if (_typeUser == 'client'){
+          if (_authProvider.isDriver==false){
+            print('entro el cliente y isdriver es : ${_authProvider.isDriver}');
             Navigator.pushNamedAndRemoveUntil(context, 'client/map', (route) => false);
           }
-          else {
-            print('El cliente si es nulo');
-            utils.Snackbar.showSnackbar(context, key, 'El usuario no es valido');
+          else{
+            print('no es cliente el isdriver es: ${_authProvider.isDriver}');
+            utils.Snackbar.showSnackbar(
+                context, key, 'El usuario no es valido');
             await _authProvider.signOut();
           }
-
         }
-        else if (_typeUser == 'driver') {
-          Driver driver = await _driverProvider.getById(_authProvider.getUser().uid);
-          print('DRIVER: $driver');
-
-          if (driver != null) {
+        else if(_typeUser == 'driver'){
+          print('else conductor');
+          if (_authProvider.isDriver==true){
+            print('entro el conductor y isdriver es : ${_authProvider.isDriver}');
             Navigator.pushNamedAndRemoveUntil(context, 'driver/map', (route) => false);
           }
-          else {
-            utils.Snackbar.showSnackbar(context, key, 'El usuario no es valido');
+          else{
+            print('no es driver el isdriver es: ${_authProvider.isDriver}');
+            utils.Snackbar.showSnackbar(
+                context, key, 'El usuario no es valido');
             await _authProvider.signOut();
           }
-
         }
-
+        else{
+          print('usuario no valido');
+        }
       }
       else {
         utils.Snackbar.showSnackbar(context, key, 'El usuario no se pudo autenticar');
         print('El usuario no se pudo autenticar');
       }
-
-    } catch(error) {
-      utils.Snackbar.showSnackbar(context, key, 'Error: $error');
+    }catch(e){
+      utils.Snackbar.showSnackbar(context, key, 'Error: $e');
       _progressDialog.hide();
-      print('Error: $error');
+      print('Error: $e');
+
     }
-
   }
-
 }
